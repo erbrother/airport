@@ -1,48 +1,98 @@
-// var fs = require('fs')
-// var AdmZip = require('adm-zip')
-
-// var zip = new AdmZip('./airport.zip')
-
-// var contentXml = zip.readAsText("word/document.xml")
-
-// // console.log(contentXml)
-// let str = "";
-// contentXml.match(/<w:t>[\s\S]*?<\/w:t>/ig).forEach((item)=>{
-
-// 	console.log(item)
-// 	// str += item.slice(5,-6)});
-// 	// fs.writeFile("./2.txt",str,(err)=>{//将./2.txt替换为你要输出的文件路径
-// 	// if(err)throw err;
-// });
 
 var fs =require('fs')
 var air = fs.readFileSync('error.txt',"utf-8");
 var airFault = fs.readFileSync('fault.txt',"utf-8");
-var errorMessage = air.split('\r\n'); 
-var airFault = airFault.split('\r\n');
+var errorMessage = air.split('\r\n'); //错误信息
+var airFault = airFault.split('\r\n'); //航班信息
 
-// console.log(errorMessage[0]);
-console.log('数据读取完毕')
-var count = 0
+var realMessage = []
 
-airFault.forEach((faultItem, index) => {
-	// 每条可能错误的信息
-	faultItem = faultItem.split(',')
-	console.log(faultItem)
-	var faultItemnum = faultItem[3].split(".") //错误航班号
+// 判断错误号码
+for (var i = airFault.length - 1; i >= 0; i--) {
+	// console.log(airFault[i]) //航班号    
+	// 可能错误的航班号
+	var airFaultnum = airFault[i].split(',')[3].split('.')
+	// console.log(airFaultnum)
 
-	errorMessage.forEach((erritem, errindex) => {
-		erritem = erritem.split(',')
-		var errnum = erritem[2].split('.')
+	// 可能错误的故障部件
+	var airFaultpart = airFault[i].split(',')[2].split('.')
+	// console.log(airFaultpart)
 
-
-		for (var i = errnum.length - 1; i >= 0; i--) {
-			if(parseInt(errnum[i]) === parseInt()){
-
+	outernum:
+	for (var j = airFaultnum.length - 1; j >= 0; j--) {
+		// console.log(airFaultnum[j])
+		for (var k = errorMessage.length - 1; k >= 0; k--) {
+			var errnum = errorMessage[k].split(',')[2].split('.')
+			inner:
+			for (var x = errnum.length - 1; x >= 0; x--) {
+				if (parseInt(airFaultnum[j]) === parseInt(errnum[x])) {
+					realMessage.push(airFault[i])
+					break outernum;
+				} 
 			}
 		}
-		// console.log(errnum)
-		count++;
-	})
-})
-console.log(count)
+	}
+}
+// 判断错误部件
+for (var i = airFault.length - 1; i >= 0; i--) {
+	// 可能错误的故障部件
+	var airFaultpart = airFault[i].split(',')[2].split('.')
+	// console.log(airFaultpart)
+
+	outerpart:
+	for (var j = airFaultpart.length - 1; j >= 0; j--) {
+		// console.log(airFaultnum[j])
+		for (var k = errorMessage.length - 1; k >= 0; k--) {
+			var errpart = errorMessage[k].split(',')[1].split('.')
+			inner:
+			for (var x = errpart.length - 1; x >= 0; x--) {
+				if (parseInt(airFaultpart[j]) === parseInt(errpart[x])) {
+					realMessage.push(airFault[i])
+					break outerpart;
+				} 
+			}
+		}
+	}
+
+	// var airFaultnum = airFault[i][4].split('.')
+	// console.log(airFaultnum)
+}
+
+// 判断错误章节
+for (var i = airFault.length - 1; i >= 0; i--) {
+	// 可能错误的章节
+	var airFaultpart = airFault[i].split(',')[4].split('.')
+	// console.log(airFaultpart)
+
+	outerpart:
+	for (var j = airFaultpart.length - 1; j >= 0; j--) {
+		// console.log(airFaultnum[j])
+		for (var k = errorMessage.length - 1; k >= 0; k--) {
+			var errpart = errorMessage[k].split(',')[3]
+			if (airFaultpart[j] === errpart) {
+				realMessage.push(airFault[i])
+				break outerpart;
+			} 
+		}
+	}
+
+	// var airFaultnum = airFault[i][4].split('.')
+	// console.log(airFaultnum)
+}
+// console.log(realMessage)
+
+const s = new Set();
+
+realMessage.forEach(x => s.add(x));
+realMessage = [];
+
+for (let i of s) {
+  realMessage.push('\r\n' + i)
+}
+
+console.log(realMessage + '')
+
+fs.writeFile('message.txt', realMessage, (err) => {
+  if (err) throw err;
+  console.log('The file has been saved!');
+});
