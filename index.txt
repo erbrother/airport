@@ -1,15 +1,15 @@
-var fs =require('fs')  //è°ƒç”¨è¯»å–æ–‡ä»¶çš„å‡½æ•°
-var air = fs.readFileSync('error.txt',"utf-8"); //è¯»å–é”™è¯¯çš„æ–‡ä»¶ä¿¡æ¯
-var airFault = fs.readFileSync('fault.txt',"utf-8");//è¯»å–å¯èƒ½é”™è¯¯çš„æ–‡ä»¶ä¿¡æ¯
-var errorMessage = air.split('\r\n'); //é”™è¯¯ä¿¡æ¯ 
-var airFault = airFault.split('\r\n'); //èˆªç­ä¿¡æ¯
+var fs =require('fs')  //µ÷ÓÃ¶ÁÈ¡ÎÄ¼şµÄº¯Êı
+var air = fs.readFileSync('error.txt',"utf-8"); //¶ÁÈ¡´íÎóµÄÎÄ¼şĞÅÏ¢
+var airFault = fs.readFileSync('fault.txt',"utf-8");//¶ÁÈ¡¿ÉÄÜ´íÎóµÄÎÄ¼şĞÅÏ¢
+var errorMessage = air.split('\r\n'); //´íÎóĞÅÏ¢ 
+var airFault = airFault.split('\r\n'); //º½°àĞÅÏ¢
 
 var realMessage = []
 
-// åˆ¤æ–­é”™è¯¯å·ç 
+// ÅĞ¶Ï´íÎóºÅÂë
 for (var i = airFault.length - 1; i >= 0; i--) {
-	// console.log(airFault[i]) //èˆªç­å·    
-	// å¯èƒ½é”™è¯¯çš„èˆªç­å·
+	// console.log(airFault[i]) //º½°àºÅ    
+	// ¿ÉÄÜ´íÎóµÄº½°àºÅ
 	var airFaultnum = airFault[i].split(',')[3].split('.')
 	// console.log(airFaultnum)
 
@@ -29,9 +29,9 @@ for (var i = airFault.length - 1; i >= 0; i--) {
 	}
 }
 
-// åˆ¤æ–­é”™è¯¯éƒ¨ä»¶
+// ÅĞ¶Ï´íÎó²¿¼ş
 for (var i = airFault.length - 1; i >= 0; i--) {
-	// å¯èƒ½é”™è¯¯çš„æ•…éšœéƒ¨ä»¶
+	// ¿ÉÄÜ´íÎóµÄ¹ÊÕÏ²¿¼ş
 	var airFaultpart = airFault[i].split(',')[2].split('.')
 	// console.log(airFaultpart)
 	outerpart:
@@ -53,9 +53,9 @@ for (var i = airFault.length - 1; i >= 0; i--) {
 	// console.log(airFaultnum)
 }
 
-// åˆ¤æ–­é”™è¯¯ç« èŠ‚
+// ÅĞ¶Ï´íÎóÕÂ½Ú
 for (var i = airFault.length - 1; i >= 0; i--) {
-	// å¯èƒ½é”™è¯¯çš„ç« èŠ‚
+	// ¿ÉÄÜ´íÎóµÄÕÂ½Ú
 	var airFaultpart = airFault[i].split(',')[4].split('.')
 	// console.log(airFaultpart)
 
